@@ -9,7 +9,8 @@ bool FULLSTOP = false;
 //brown = bottom right, 33/34, pwm: 6
 //green = top right, 35/36, pwm: 7
 //blue = top left, 37/38, pwm: 8
-void setup() {
+void setup() 
+{
 Serial.begin(9600);
 //pwm pins
   //top left
@@ -82,13 +83,11 @@ void command(String Output)
 
             
           }
-          else if(Output.charAt(5) == '0'){
+          else
+          {
             CW = false;
                   //      digitalWrite(LED_BUILTIN, HIGH);
 
-          }
-          else{
-            outputAndErrors(3, "invalid rotation shutting down");
           }
           // speed system
         if(Output.length() == 9){
@@ -107,16 +106,14 @@ void command(String Output)
           int ones = Output.charAt(9);
           speed = hunderds + tens + ones;
         }
-        if(speed >= 0 && speed <= 255)
-        {
+        Serial.println(MotorID);
+        Serial.println(CW);
+        Serial.println(speed);
  //speed debugging
         Serial.println(speed);
       //run motors
           MotorControl(MotorID, speed, CW);
-        }
-        else {
-        outputAndErrors(2, "faulty speed");
-        }
+
        
 } 
 
@@ -216,7 +213,7 @@ void emergencyShutdownFullstop()
       analogWrite(6, 0);
       analogWrite(7, 0);
       analogWrite(8, 0);
-      FULLSTOP = true;
+      //FULLSTOP = true;
 
 }
 void outputAndErrors(int ID, String Text)
@@ -225,6 +222,8 @@ void outputAndErrors(int ID, String Text)
   if(ID == 0)
   {
     Serial.write("general error");
+        emergencyShutdownFullstop();
+FULLSTOP = true;
   }
   else if(ID == 1)
   {
@@ -234,11 +233,11 @@ void outputAndErrors(int ID, String Text)
   else if(ID == 2)
   {
     Serial.write("Invalid speed val");
-    emergencyShutdownFullstop();
+   // emergencyShutdownFullstop();
   }
   else if(ID == 3)
   {
     Serial.write("Invalid rotation value");
-    emergencyShutdownFullstop();
+  //  emergencyShutdownFullstop();
   }
 }
